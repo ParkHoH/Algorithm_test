@@ -42,7 +42,7 @@ def solution(dartResult):
 
 
 
-#best solution
+#best solution: regular expression
 import re
 
 def solution(dartResult):
