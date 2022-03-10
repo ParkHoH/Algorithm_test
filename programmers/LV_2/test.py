@@ -1,9 +1,6 @@
-import re
 
 
-a = "abcdefg"
-p = re.compile('[a-zA-Z]{1,5}')
-b = p.findall(a)
-b = ''
-
-print(str(b))
+a = "a"
+while a:
+    print(a)
+    a = a[1:]
