@@ -21,10 +21,8 @@ def solution(m, n, board):
         
         # 지워질 블록들 '0'으로 만들기
         cnt += len(list_delete)
-        for i in range(n):
-            for j in range(m):
-                if (i, j) in list_delete:
-                    board[i][j] = '0'
+        for i, j in list_delete:
+            board[i][j] = '0'
         
         # 블록 아래로 내리기
         for j in range(m):
