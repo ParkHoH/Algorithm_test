@@ -1,3 +1,5 @@
+
+# my solution: 시간 초과
 from itertools import combinations
 
 def solution(clothes):
