@@ -18,3 +18,6 @@ def solution(s):
     return result
 
 print(solution("[](){}"))
+print(solution("}]()[{"))
+print(solution("}]()[{"))
+print(solution("}]()[{"))
