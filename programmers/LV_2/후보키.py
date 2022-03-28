@@ -1,20 +1,24 @@
 from itertools import combinations
 
 def solution(relation):
-    L = []
+    result = []
     for num in range(1, len(relation[0])+1):
         combination = list(combinations(range(len(relation[0])), num))
         for comb in combination:
             temp = [tuple([relation[i][j] for j in comb]) for i in range(len(relation))]
+
+            # 유일성 확인
             if len(set(temp)) == len(relation):
                 notSubset = True
-                for i in L:
+                for i in result:
+                    # 최소성 확인
                     if set(i).issubset(comb):
                         notSubset = False
                         break
                 if notSubset:
-                    L.append(comb)
-    return len(L)
+                    result.append(comb)
+                    
+    return len(result)
 
 # from itertools import combinations
 
