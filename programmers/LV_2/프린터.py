@@ -6,15 +6,17 @@ def solution(priorities, location):
         L.append((priorities[i], i))
     cnt = 0
     while True:
-        cnt += 1
-        if len(L) == 1: return cnt
+        if len(L) == 1: 
+            return cnt+1
         priority, idx = L.popleft()
-        check = idx
-        max_priority = max([i for i, _ in L])
-        if max_priority > priority: 
-            L.append((priority, idx))
-            check = -1
-        if check == location:
+        for i in range(len(L)):
+            if L[i][0] > priority:
+                L.append((priority, idx))
+                idx = -1
+                break
+        else:
+            cnt += 1
+        if idx == location: 
             return cnt
 
 print(solution([2, 1, 3, 2],2))
