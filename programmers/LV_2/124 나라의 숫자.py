@@ -9,7 +9,7 @@ def solution(n):
 
 # other solution
 def solution(n):
-    dic = {0: "1", 1: "2", 2: "4"}
+    dic = ["1", "2", "4"]
     answer = ''
     while n:
         n -= 1
