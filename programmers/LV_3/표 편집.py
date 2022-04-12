@@ -46,9 +46,14 @@ def solution(n, k, cmd):
             for i in range(idx-1, -1, -1):
                 if L[i][3] == "O":
                     L[idx][1] = i
-                    L[idx][2] = L[i][2]
+                    if L[i][2] == i:
+                        L[idx][2] = idx
+                    else:
+                        L[L[i][2]][1] = idx
+                        L[idx][2] = L[i][2]
                     L[i][2] = idx
-                    L[L[idx][2]][1] = idx
+            else:
+                L[idx][1] = L[idx][2] = idx
             
     return ''.join([result[3] for result in L])
 
