@@ -4,7 +4,7 @@ def solution(routes):
     start, end = routes[0]
     for i in range(1, len(routes)):
         if routes[i][0] in range(start, end+1) or routes[i][1] in range(start, end+1):
-            start = min(start, routes[i][0])
+            start = max(start, routes[i][0])
             end = min(end, routes[i][1])
         else:
             start, end = routes[i]
