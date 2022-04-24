@@ -1,5 +1,36 @@
-# 내일 다시 풀기! (다익스트라 알고리즘 / 플로이드 와샬 알고리즘)
+import heapq
 
+def solution(N, road, K):
+    visited = [False] * (N+1)
+    distance = [float('inf')] * (N+1)
+    heap = []
+    graph = [[] for _ in range(N+1)]
+    for node1, node2, cost in road:
+        graph[node1].append((node2, cost))
+        graph[node2].append((node1, cost))
+        
+    def dijkstra():
+        heapq.heappush(heap, (0, 1))
+        distance[1] = 0
+        while heap:
+            c, node = heapq.heappop(heap)
+            visited[node] = True
+            for i in graph[node]:
+                if visited[i[0]]:
+                    continue
+                cost = c + i[1]
+                if cost < distance[i[0]]:
+                    distance[i[0]] = cost
+                    heapq.heappush(heap, (distance[i[0]], i[0]))
+
+    dijkstra()
+    result = 0
+    for i in range(1, len(distance)):
+        if distance[i] != float('inf') and distance[i] <= K:
+            result += 1
+    return result
+
+# 시간 초과: 다익스트라 알고리즘 풀이 필요
 from collections import deque
 
 set_result = set()
@@ -16,7 +47,6 @@ def bfs(n, K, total_cost, graph, visited, cost_list):
                 visited[dest] = True
                 cost_list[dest] = cost+cost2
                 queue.append((dest, cost2))
-        
             
 def solution(N, road, K):
     graph = [[] for _ in range(N+1)]
@@ -38,10 +68,6 @@ def solution(N, road, K):
     for i in range(len(graph)):
         graph[i].sort(key=lambda x: x[1])
     return graph
-    
-    cost_list = [0] * (N+1)
-    bfs(1, K, 0, graph, visited, cost_list)
-    return cost_list
 
 print(solution(5,[[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3))
 
