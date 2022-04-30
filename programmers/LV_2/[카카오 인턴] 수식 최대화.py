@@ -32,7 +32,7 @@ def solution(expression):
                         temp = [eval(str(expression[i][0]) + oper + str(expression[i+1][0])), expression[i+1][1]]
                         expression = expression[:i] + [temp] + expression[i+2:]
                         break
-                    start += 1
+                    start += 1  
                     
         max_value = max(max_value, abs(expression[0][0]))
     return max_value
