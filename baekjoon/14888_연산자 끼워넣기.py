@@ -20,7 +20,7 @@ for permu in permutations(operator, N-1):
             num -= L[i+1]
         elif permu[i] == '*':
             num *= L[i+1]
-        elif permu[i] == '/':
+        elif permu[i] == '/':   
             num = int(num / L[i+1])
     
     max_value = max(max_value, num)
