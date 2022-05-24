@@ -1,43 +1,59 @@
-n, m, h = map(int, input().split())
-visited = [[False] * (n+1) for _ in range(h+1)]
-combi = []
-for _ in range(m):
+from itertools import combinations
+
+N, M, H = map(int, input().split())
+graph = [[0] * (N+1) for _ in range(H+1)]
+for _ in range(M):
     a, b = map(int, input().split())
-    visited[a][b] = True
+    graph[a][b] = 1 
+
+L = []
+for i in range(1, H+1):
+    for j in range(1, N):
+        if graph[i][j] != 1 and graph[i][j-1] != 1 and graph[i][j+1] != 1:
+            L.append([i, j])
 
 def check():
-    for i in range(1, n+1):
-        now = i
-        for j in range(1, h+1):
-            if visited[j][now-1]:
-                now -= 1
-            elif visited[j][now]:
-                now += 1
-        if now != i:
+    for j in range(1, N+1):
+        i = 1
+        column = j
+        while i != H+1:
+            if graph[i][column-1] == 1:
+                column -= 1
+            elif graph[i][column] == 1:
+                column += 1
+            i += 1
+
+        if column != j:
             return False
+    
     return True
 
-def dfs(depth, idx):
-    global answer
-    if depth >= answer:
-        return
-    if check():
-        answer = depth
-        return
+result = 0
+impossible = True
 
-    for c in range(idx, len(combi)):
-        x, y = combi[c]
-        if not visited[x][y-1] and not visited[x][y+1]:
-            visited[x][y] = True
-            dfs(depth+1, c+1)
-            visited[x][y] = False
+while result != 4:
+    if result == 0 and check():
+        print(result)
+        impossible = False
+        break
 
-for i in range(1,h+1):
-    for j in range(1, n):
-        if not visited[i][j-1] and not visited[i][j] and not visited[i][j+1]:
-            combi.append([i, j])
+    if result:
+        for comb in combinations(L, result):
+            for i, j in comb:
+                graph[i][j] = 1
 
-answer = 4
-dfs(0, 0)
+            if check():
+                print(result)
+                impossible = False
+                break
 
-print(answer if answer < 4 else -1)
+            for i, j in comb:
+                graph[i][j] = 0
+
+    if not impossible:
+        break    
+    
+    result += 1
+
+if impossible:
+    print(-1)
