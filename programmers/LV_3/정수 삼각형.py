@@ -1,11 +1,20 @@
-def solution(triangle): 
-    dp = [[0] * len(triangle) 
-    for _ in range(len(triangle))] 
-    dp[0][0] = triangle[0][0]
+def solution(triangle):
+    for i in range(1, len(triangle)):
+        for j in range(len(triangle[i])):
+            if j-1 >= 0:
+                a = triangle[i-1][j-1]
+            else:
+                a = 0
+                
+            if j < len(triangle[i])-1:
+                b = triangle[i-1][j]
+            else:
+                b = 0
+                
+            triangle[i][j] += max(a, b)
     
-    for i in range(0, len(triangle) - 1): 
-        for j in range(len(triangle[i])): 
-            dp[i + 1][j] = max(dp[i + 1][j], dp[i][j] + triangle[i + 1][j]) 
-            dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + triangle[i + 1][j + 1]) 
-            
-    return max(dp[-1])
+    result = 0
+    for i in triangle[-1]:
+        result = max(result, i)
+    
+    return result
