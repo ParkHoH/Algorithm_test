@@ -14,7 +14,7 @@ for case in range(1, TC+1):
             checked_cnt += 1
             continue
         dic[i] = L[1:]
-
+    
     result = 1
     while True:
         if checked_cnt == N:
@@ -26,7 +26,6 @@ for case in range(1, TC+1):
         for i in range(1, N+1):
             if checked[i]:
                 continue
-
             skip = False
             for idx in dic[i]:
                 if not checked[idx]:
