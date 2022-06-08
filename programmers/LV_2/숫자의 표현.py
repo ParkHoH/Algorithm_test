@@ -26,3 +26,27 @@ def solution(n):
             elif result > n:
                 break
     return cnt
+
+
+# 투포인터
+def solution(n):
+    L = list(range(1, n+1))
+    start = end = 0
+    result = 0
+    num = L[0]
+    while end < n:
+        if num == n:
+            result += 1
+            end += 1
+            if end != n:
+                num += L[end]
+        
+        elif num < n:
+            end += 1
+            num += L[end]
+            
+        else:
+            num -= L[start]
+            start += 1
+            
+    return result
