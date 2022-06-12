@@ -1,20 +1,20 @@
 import sys
 input = sys.stdin.readline
 
-def dfs(num, arr):
-    arr[num] = -2
-    for i in range(len(arr)):
-        if num == arr[i]:
-            dfs(i, arr)
+def dfs(num, L):
+    L[num] = -2
+    for i in range(len(L)):
+        if num == L[i]:
+            dfs(i, L)
 
 n = int(input())
-arr = list(map(int, input().split()))
+L = list(map(int, input().split()))
 k = int(input())
-count = 0
+cnt = 0
 
-dfs(k, arr)
-count = 0
-for i in range(len(arr)):
-    if arr[i] != -2 and i not in arr:
-        count += 1
-print(count)
+dfs(k, L)
+cnt = 0
+for i in range(len(L)):
+    if L[i] != -2 and i not in L:
+        cnt += 1
+print(cnt)
