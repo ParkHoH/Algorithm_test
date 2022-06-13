@@ -38,8 +38,11 @@ def solution(grid, k):
             # 숲이더라도 움직일 수 있는 횟수가 1이고 목적지가 아닌 경우 스킵
             if grid[nx][ny] == "F" and possible_cnt == 1 and nx != len(grid)-1 and ny != len(grid[0])-1:
                 continue
-
-            dfs(nx, ny, possible_cnt-1, camping_cnt, deepcopy(visited))
+            
+            visited[nx][ny] = True
+            dfs(nx, ny, possible_cnt-1, camping_cnt, visited)
+            visited[nx][ny] = False
+            # dfs(nx, ny, possible_cnt-1, camping_cnt, deepcopy(visited))
 
     dfs(0, 0, k, 0, visited)
     return result[0]
