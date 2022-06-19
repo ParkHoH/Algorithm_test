@@ -39,10 +39,12 @@ def solution(grid, k):
             if grid[nx][ny] == "F" and possible_cnt == 1 and nx != len(grid)-1 and ny != len(grid[0])-1:
                 continue
             
-            visited[nx][ny] = True
-            dfs(nx, ny, possible_cnt-1, camping_cnt, visited)
-            visited[nx][ny] = False
-            # dfs(nx, ny, possible_cnt-1, camping_cnt, deepcopy(visited))
+            dfs(nx, ny, possible_cnt-1, camping_cnt, deepcopy(visited))
+
+            # 백트래킹으로도 가능
+            # visited[nx][ny] = True
+            # dfs(nx, ny, possible_cnt-1, camping_cnt, visited)
+            # visited[nx][ny] = False
 
     dfs(0, 0, k, 0, visited)
     return result[0]

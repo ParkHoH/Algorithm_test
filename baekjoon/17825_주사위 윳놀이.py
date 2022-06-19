@@ -51,7 +51,6 @@ def dfs(idx, cnt):
 dice = list(map(int, input().split()))
 chess = [0 for _ in range(4)]
 c = [0 for _ in range(33)]
-
 result = 0
 dfs(0, 0)
 print(result)
