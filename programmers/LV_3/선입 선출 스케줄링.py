@@ -3,10 +3,10 @@ def solution(n, cores):
         return n
     
     n -= len(cores)
-    start = 1
-    end = max(cores) * n
-    while start < end:
-        mid = (start + end) // 2
+    left = 1
+    right = max(cores) * n
+    while left < right:
+        mid = (left + right) // 2
         capacity = 0
         for core in cores:
             capacity += mid // core
@@ -14,26 +14,26 @@ def solution(n, cores):
         if capacity >= n:
             right = mid
         else:
-            start = mid + 1
+            left = mid + 1
             
     return right
 
 
 # wrong solution
-# import heapq
+import heapq
 
-# def solution(n, cores):
-#     heap = []
-#     num = min(n, len(cores))
-#     for i in range(num):
-#         heapq.heappush(heap, [cores[i], i])
+def solution(n, cores):
+    heap = []
+    num = min(n, len(cores))
+    for i in range(num):
+        heapq.heappush(heap, [cores[i], i])
     
-#     while heap:
-#         cnt, idx = heapq.heappop(heap)
-#         if num != n:
-#             num += 1
-#             heapq.heappush(heap, [cnt + cores[idx], idx])
+    while heap:
+        cnt, idx = heapq.heappop(heap)
+        if num != n:
+            num += 1
+            heapq.heappush(heap, [cnt + cores[idx], idx])
             
-#     return idx + 1
+    return idx + 1
 
 print(solution(	6, [1, 2, 3]))
