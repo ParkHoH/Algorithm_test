@@ -10,11 +10,12 @@ def dp(start, end, sticker):
     return max(sticker)
 
 def solution(sticker):
-    copy_sticker = deepcopy(sticker)
     if len(sticker) <= 3:
         return max(sticker)
 
-    result = max(dp(2, len(sticker)-1, sticker), dp(3, len(copy_sticker), copy_sticker))
+    copy_sticker = deepcopy(sticker)
+    n = len(sticker)
+    result = max(dp(2, n-1, sticker), dp(3, n, copy_sticker))
     return result
 
 print(solution([14, 6, 5, 11, 3, 9, 2, 10]))
