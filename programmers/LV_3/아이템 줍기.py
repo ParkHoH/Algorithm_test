@@ -1,4 +1,4 @@
-# # bfs 솔루션
+# bfs 솔루션
 from collections import deque
 
 def solution(rectangle, characterX, characterY, itemX, itemY):
