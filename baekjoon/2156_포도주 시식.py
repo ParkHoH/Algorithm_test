@@ -7,7 +7,7 @@ L = [0] * N
 for i in range(N):
     L[i] = int(input())
 
-if N == 2:
+if N <= 2:
     print(sum(L))
 
 else:
@@ -19,4 +19,4 @@ else:
     for i in range(3, N):
         dp[i] = max(L[i] + dp[i-2], L[i] + L[i-1] + dp[i-3], dp[i-1])
 
-    print(max(L))
+    print(max(dp[-1], dp[-2]))
