@@ -1,3 +1,19 @@
+def solution(sizes):
+    dp = [[0] * len(sizes) for _ in range(len(sizes))]
+    
+    for i in range(1, len(sizes)): 
+        for j in range(0, len(sizes) - i): 
+            num = i + j
+            L = []
+            
+            for k in range(j, num):
+                L.append(sizes[j][0] * sizes[k][1] * sizes[num][1] + dp[j][k] + dp[k+1][num])
+                
+            dp[j][num] = min(L)
+            
+    return dp[0][-1]
+
+
 # 틀린 풀이
 def solution(matrix_sizes):
     result = 0
