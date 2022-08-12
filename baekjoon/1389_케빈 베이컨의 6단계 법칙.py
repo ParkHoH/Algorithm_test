@@ -20,8 +20,7 @@ checked = [False] * 101
 def dfs(person):
     global cnt
     if cnt == N:
-        break
-    
+        return
 
     return
 
