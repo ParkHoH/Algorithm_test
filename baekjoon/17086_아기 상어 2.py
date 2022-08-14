@@ -8,12 +8,12 @@ for _ in range(N):
 direction = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)]
 
 def bfs(x, y):
-    q = deque()
-    q.append((x, y, 1))
+    queue = deque()
+    queue.append((x, y, 1))
     visited = [[False] * M for _ in range(N)]
     visited[x][y] = True
-    while q:
-        x, y, distance = q.popleft()
+    while queue:
+        x, y, distance = queue.popleft()
         for i in range(9):
             dx, dy = direction[i]
             nx, ny = x + dx, y + dy
@@ -26,7 +26,7 @@ def bfs(x, y):
 
             if not visited[nx][ny]:
                 visited[nx][ny] = True
-                q.append((nx, ny, distance+1))
+                queue.append((nx, ny, distance+1))
             
 max_distance = 0
 for i in range(N):
