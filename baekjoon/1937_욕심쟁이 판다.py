@@ -33,6 +33,7 @@ for i in range(n):
             
 print(result)
 
+# 시간 초과 발생
 # from copy import deepcopy
 # import sys
 # input = sys.stdin.readline
