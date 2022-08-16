@@ -3,7 +3,7 @@ from collections import deque
 def chk_visited(x, time, ori_x):
     if checked[x][0]: # 이미 방문한 경우
         if checked[x][2] == time+1: # 방문 시간이 동일해야 함
-            checked[x][1] += checked[ori_x][1]
+            checked[x][1] += checked[ori_x][1] # 케이스 추가
 
     else: # 첫 방문인 경우
         checked[x][0] = True
@@ -18,7 +18,7 @@ checked[N][0] = True
 queue = deque()
 queue.append([N, 0])
 
-while queue:
+while queue: # 최단 거리 탐색을 위한 BFS
     x, time = queue.popleft()
 
     if x == K:

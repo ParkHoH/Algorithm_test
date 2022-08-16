@@ -5,10 +5,9 @@ for i in range(1, 5):
     percent.append(temp[i] / 100)
 
 dx = [0, 0, 1, -1]
-dy = [-1, 1, 0, 0,]
+dy = [-1, 1, 0, 0]
 visited = [[False] * (2*N + 1) for _ in range(2*N + 1)]
-result = 0
-cnt = 0
+result = cnt = 0
 
 def dfs(x, y, depth, cum_percent):
     if depth == N:
