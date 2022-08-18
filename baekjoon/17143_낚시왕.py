@@ -28,11 +28,13 @@ def move():
                         x = (R-1) - (speed - (R-1-i))
                     else:
                         x = R-1-i + speed
-                        
+
                     new_board = check_exist(x, j, speed, direction, size, new_board)
                 
                 elif direction == 1:
-                    x
+                    if speed >= i:
+                        direction = change_dir[direction]
+                        x = 
 
     return new_board
 
