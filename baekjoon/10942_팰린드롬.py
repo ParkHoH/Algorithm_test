@@ -1,27 +1,28 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
-numbers = list(map(int, input().split()))
-m = int(input())
+N = int(input())
+L = list(map(int, input().split()))
+M = int(input())
+dp = [[0] * N for _ in range(N)]
 
-dp = [[0] * n for _ in range(n)]
+for i in range(N):
+    for start in range(N-i):
+        end = start+i
 
-for i in range(n):
-    for start in range(n - i):
-        end = start + i
-        
         if start == end:
             dp[start][end] = 1
-        elif numbers[start] == numbers[end]:
-            if start + 1 == end: 
+
+        elif L[start] == L[end]:
+            if end - start == 1:
                 dp[start][end] = 1
-            elif dp[start+1][end-1] == 1: 
+
+            if dp[start+1][end-1] == 1:
                 dp[start][end] = 1
-            
-for question in range(m):
-    s, e = map(int, input().split())
-    print(dp[s-1][e-1])
+
+for _ in range(M):
+    start, end = map(int, input().split())
+    print(dp[start-1][end-1])
 
 # import sys
 # input = sys.stdin.readline

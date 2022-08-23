@@ -1,40 +1,39 @@
 import sys
 input = sys.stdin.readline
 
-T = int(input())
-F = int(input())
-parent = [i for i in range(N)]
 
 def find(x):
-    if x != parent[x]:
-        parent[x] = find(parent[x])
+    if x != parent[x][0]:
+        parent[x][0] = find(parent[x][0])
 
-    return parent[x]
+    return parent[x][0]
 
-for i in range(N):
-    L = list(map(int, input().split()))
 
-    for j in range(i+1, N):
-        if L[j] == 1:
-            a = find(i)
-            b = find(j)
+T = int(input())
 
-            if a > b:
-                parent[a] = b
-            elif a < b:
-                parent[b] = a
+for _ in range(T):
+    F = int(input())
+    dic_idx = {}
+    parent = []
+    idx = 0
 
-def check():
-    L = list(map(int, input().split()))
-    standard = find(L[0]-1)
+    for _ in range(F):
+        a, b = input().split()
+        
+        if a not in dic_idx:
+            dic_idx[a] = idx
+            parent.append([idx, 1])
+            idx += 1
 
-    for i in range(1, M):
-        if find(L[i]-1) != standard:
-            return False
-            
-    return True
+        if b not in dic_idx:
+            dic_idx[b] = idx
+            parent.append([idx, 1])
+            idx += 1
 
-if check():
-    print("YES")
-else:
-    print("NO")
+        a, b = find(dic_idx[a]), find(dic_idx[b])
+
+        if a != b:
+            parent[b][0] = a
+            parent[a][1] += parent[b][1]
+
+        print(parent[a][1])
