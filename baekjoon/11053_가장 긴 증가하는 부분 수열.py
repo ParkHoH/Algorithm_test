@@ -13,6 +13,7 @@ def dfs(idx):
     return dp[idx]
 
 for i in range(N):
-    dfs(i)
+    if dp[i] == -1:
+        dfs(i)
     
 print(max(dp))

@@ -1,28 +1,12 @@
 n = int(input())
-arr = list(map(int, input().split()))
+L = list(map(int, input().split()))
 
-new_arr = []
-sum = 0
-if arr[0] >= 0:
-    plus = True
-else:
-    plus = False
+dp = [[0, 0] for _ in range(n)]
+dp[0][0] = result = L[0]
 
-for i in arr:
-    if i > 0 and plus:
-        sum += i
-        
-    elif i > 0 and not plus:
-        plus = True
-        new_arr.append(sum)
-        sum = i
-    
-    elif i < 0 and plus:
-        plus = False
-        new_arr.append(sum)
-        sum = i
+for i in range(1, n):
+    dp[i][0] = max(L[i], dp[i-1][0] + L[i])
+    dp[i][1] = max(dp[i-1][0], dp[i-1][1] + L[i])
+    result = max(result, max(dp[i]))
 
-    elif i < 0 and not plus:
-        sum += i
-
-print(new_arr)
+print(result)
