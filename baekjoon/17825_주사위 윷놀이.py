@@ -1,0 +1,1 @@
+direction = {i: i for i in range()}
