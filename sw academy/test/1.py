@@ -1,25 +1,24 @@
 import sys
 input = sys.stdin.readline
 
-N = int(input())
-L = list(map(int, input().split()))
-M = int(input())
-dp = [[0] * N for _ in range(N)]
+n = int(input())
+cases = list(map(int, input().split()))
+lis = [0]
 
-for i in range(N):
-    for start in range(N-i):
-        end = start+i
+for case in cases:
+    if lis[-1]<case:
+        lis.append(case)
+    else:
+        left = 0
+        right = len(lis)
 
-        if start == end:
-            dp[start][end] = 1
+        while left<right:
+            mid = (right+left)//2
+            if lis[mid]<case:
+                left = mid+1
+            else:
+                right = mid
+        lis[right] = case
 
-        elif L[start] == L[end]:
-            if end - start == 1:
-                dp[start][end] = 1
-
-            if dp[start+1][end-1] == 1:
-                dp[start][end] = 1
-
-for _ in range(M):
-    start, end = map(int, input().split())
-    print(dp[start-1][end-1])
+print(len(lis)-1)
+print(*lis)
