@@ -1,24 +1,28 @@
 N = int(input())
 L = list(map(int, input().split()))
+dp = [-1] * N
 
-result = []
+def dfs(idx):
+    if dp[idx] == -1:
+        dp[idx] = [L[idx]]
 
-for i in L:
-    if not result or result[-1] < i:
-        result.append(i)
+        for i in range(idx+1, N):
+            if L[idx] < L[i]:
+                new_list = [L[idx]] + dfs(i)
+                if len(dp[idx]) < len(new_list):
+                    dp[idx] = new_list
 
-    else:
-        left, right = 0, len(result)-1
+    return dp[idx]
 
-        while left < right:
-            mid = (left + right) // 2
+for i in range(N):
+    if dp[i] == -1:
+        dfs(i)
 
-            if result[mid] < i:
-                left = mid + 1
-            else:
-                right = mid
+max_len = max_idx = 0
+for i in range(N):
+    if max_len < len(dp[i]):
+        max_len = len(dp[i])
+        max_idx = i
 
-        result[right] = i
-
-print(len(result))
-print(*result)
+print(max_len)
+print(*dp[max_idx])
