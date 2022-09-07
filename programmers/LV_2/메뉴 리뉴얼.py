@@ -1,3 +1,33 @@
+# 최근 풀이(22. 09. 07)
+from collections import defaultdict
+from itertools import combinations
+
+def solution(orders, course):
+    result = []
+
+    for cnt in course:
+        combi_menu = defaultdict(int)
+
+        for order in orders:
+            for combi in combinations(sorted(order), cnt):
+                combi_menu[combi] += 1
+
+        temp = []
+        max_cnt = 2
+
+        for menu, cnt in combi_menu.items():
+            if cnt > max_cnt:
+                temp = [''.join(menu)]
+                max_cnt = cnt
+            elif cnt == max_cnt:
+                temp.append(''.join(menu))
+
+        result += temp
+
+    return sorted(result)
+
+
+# 예전 풀이
 from itertools import combinations
 
 def solution(orders, course):

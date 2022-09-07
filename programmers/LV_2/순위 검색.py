@@ -1,3 +1,39 @@
+# 최근 풀이 (22. 09. 07)
+from collections import defaultdict
+from bisect import bisect_left
+
+dict_info = defaultdict(list)
+
+def subset(idx, combi, list_info):
+    if idx == 4:
+        dict_info[combi].append(int(list_info[-1]))
+        return
+
+    subset(idx+1, combi + list_info[idx], list_info)
+    subset(idx+1, combi + "-", list_info)
+
+def solution(info, query):
+    for spec in info:
+        subset(0, "", spec.split())
+
+    for k, v in dict_info.items():
+        dict_info[k] = sorted(v)
+
+    result = []
+
+    for q in query:
+        q = q.split(" and ")
+        q = q[:-1] + q[-1].split(" ")
+        
+        target = ''.join(q[:-1])
+        score = int(q[-1])
+
+        cnt = len(dict_info[target]) - bisect_left(dict_info[target], score)
+        result.append(cnt)
+
+    return result
+
+
 from itertools import combinations
 from bisect import bisect_left
 

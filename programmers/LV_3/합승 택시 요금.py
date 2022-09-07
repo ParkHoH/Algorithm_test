@@ -1,3 +1,46 @@
+# 최근 풀이 (22. 09. 07)
+import heapq
+
+def solution(n, s, a, b, fares):
+    graph = [[] for _ in range(n+1)]
+
+    for x, y, cost in fares:
+        graph[x].append([y, cost])
+        graph[y].append([x, cost])
+
+
+    def dijkstra(start, end):
+        dist = [float('inf')] * (n+1)
+        dist[start] = 0
+        heap = [[0, start]]
+
+        while heap:
+            cumm_cost, cur = heapq.heappop(heap)
+
+            if cur == end:
+                return cumm_cost
+
+            if cumm_cost > dist[cur]:
+                continue
+
+            for node, cost in graph[cur]:
+                sum_cost = cumm_cost + cost
+
+                if sum_cost < dist[node]:
+                    dist[node] = sum_cost
+                    heapq.heappush(heap, [sum_cost, node])
+
+        return float('inf')
+
+
+    result = float('inf')
+
+    for i in range(1, n+1):
+        result = min(result, dijkstra(s, i) + dijkstra(i, a) + dijkstra(i, b)) # 이 부분을 개선할 수 있음
+
+    return result
+
+
 import heapq
 
 def solution(n, s, a, b, fares):
