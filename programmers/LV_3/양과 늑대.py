@@ -5,14 +5,14 @@ def solution(info, edges):
     result = 0
 
     def dfs(cntSheep, cntWolf, visited):
-        if cntSheep <= cntWolf:
+        if cntSheep <= cntWolf: # 늑대의 수가 더 많아지는 경우
             return
 
         global result
         result = max(result, cntSheep)
 
         for parent, child in edges:
-            isWolf = info[child]
+            isWolf = info[child] # 0, 1
 
             if visited[parent] and not visited[child]:
                 visited[child] = True
@@ -23,6 +23,7 @@ def solution(info, edges):
     return result
 
 
+############################################################
 from copy import deepcopy
 
 def solution(info, edges):
@@ -44,6 +45,7 @@ def solution(info, edges):
         for i in connected:
             copy_connected = deepcopy(connected)
             copy_connected.remove(i)
+
             for j in graph[i]:
                 copy_connected.add(j)
 
