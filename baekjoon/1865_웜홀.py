@@ -6,7 +6,7 @@ TC = int(input())
 
 for _ in range(TC):
     N, M, W = map(int, input().split())
-    graph = defaultdict(int)
+    graph = defaultdict(defaultdict(int))
 
     for _ in range(M):
         a, b, cost = map(int, input().split())
