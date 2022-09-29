@@ -3,11 +3,11 @@
 N = int(input())
 weights = list(map(int, input().split()))
 weights.sort()
-target = 1
-
+limit = 1
+ 
 for weight in weights:
-    if weight <= target:
-        target += weight
+    if weight <= limit:
+        limit += weight
     else: break
 
-print(target)
+print(limit)
