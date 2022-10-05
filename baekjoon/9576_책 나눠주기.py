@@ -1,17 +1,17 @@
+# x[1] 기준 오름차순 정렬
 import sys
 input = sys.stdin.readline
 
 for _ in range(int(input())):
     N, M = map(int, input().split())
-
     wants = [[*map(int, input().split())] for _ in range(M)]
-    wants.sort(key=lambda x: (-x[1], -x[0]))
 
+    wants.sort(key=lambda x: x[1]) # 다른 기준으로 정렬할 경우에는 항상 반례가 존재함
     rented = [False] * (N+1)
     answer = 0
     
     for start, end in wants:
-        for i in range(min(N, end), start-1, -1):
+        for i in range(start, end+1):
             if not rented[i]:
                 rented[i] = True
                 answer += 1
