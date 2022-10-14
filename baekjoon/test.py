@@ -8,11 +8,6 @@ loc2n = {} # 좌표 -> 번호
 n2ball = [-1] * N**2 # 번호 -> 번호에 해당하는 공 번호
 result = 0
  
-def print_ball(): # 디버그
-    for i in range(N):
-        print([n2ball[loc2n[(i, j)]] for j in range(N)])
-    print()
- 
 def init_grid():
     """
     2차원 좌표 정보를 1차원으로 변경
@@ -144,7 +139,6 @@ def solve():
             arrangement()
         # 5. 구슬 변화
         translate_all_balls()
-        # print_ball()
  
 solve()
 print(result)
