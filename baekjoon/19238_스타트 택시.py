@@ -1,106 +1,126 @@
 from collections import deque
-import sys
 
-input = sys.stdin.readline
-dx = [1, -1, 0, 0]
-dy = [0, 0, 1, -1]
+dx = (-1, 0, 0, 1)
+dy = (0, -1, 1, 0)
 
-def bfs1(x, y):
-    global fuel
-    q1.append([x, y])
-    c1[x][y], cnt = 1, 0
-    while q1:
-        qlen = len(q1)
-        p = []
-        cnt += 1
-        if cnt >= fuel:
-            return 0
-        for _ in range(qlen):
-            x, y = q1.popleft()
-            for i in range(4):
-                nx, ny = x + dx[i], y + dy[i]
-                if 0 <= nx < n and 0 <= ny < n:
-                    if a[nx][ny] != -1 and c1[nx][ny] == 0:
-                        if a[nx][ny] > 0:
-                            p.append([nx, ny])
-                        q1.append([nx, ny])
-                        c1[nx][ny] = 1
-        if p:
-            break
+N, M, fuel = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(N)]
+taxt_x, taxt_y = map(int, input().split())
+taxi = (taxt_x-1, taxt_y-1)
 
-    if not p:
-        return 0
+destinations = {}
+client_idx = 2
 
-    fuel -= cnt
-    p = sorted(p)
-    x, y = p[0]
-    res = bfs2(x, y, a[x][y])
-    if res == 0:
-        return 0
-    
-    length, nx, ny = res
-    fuel += length
-    a[x][y] = 0
-    return nx, ny
+for _ in range(M):
+    r, c, dest_x, dest_y = map(int, input().split())
+    r -= 1; c -= 1; dest_x -= 1; dest_y -= 1
 
+    board[r][c] = client_idx
+    destinations[client_idx] = (dest_x, dest_y)
+    client_idx += 1
 
-def bfs2(x, y, idx):
-    q2.append([x, y])
-    c2[x][y] = 0
-    while q2:
-        x, y = q2.popleft()
-        if c2[x][y] >= fuel:
-            return 0
+def find_dest_dist(x, y):
+    dest_x, dest_y = destinations[board[x][y]]
+    board[x][y] = 0
+
+    visited = [[False] * N for _ in range(N)]
+    visited[x][y] = True
+
+    queue = deque()
+    queue.append((x, y, 0))
+
+    while queue:
+        x, y, dist = queue.popleft()
+
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n:
-                if a[nx][ny] != -1 and c2[nx][ny] == -1:
-                    q2.append([nx, ny])
-                    c2[nx][ny] = c2[x][y] + 1
-                    if [nx, ny] == d[idx]:
-                        return c2[nx][ny], nx, ny
-    return 0
 
+            if nx < 0 or ny < 0 or nx >= N or ny >= N:
+                continue
 
-n, m, fuel = map(int, input().split())
-a = []
-for i in range(n):
-    a.append(list(map(int, input().split())))
-    for j in range(n):
-        if a[i][j] == 1:
-            a[i][j] = -1
+            if visited[nx][ny] or board[nx][ny] == 1:
+                continue
+            
+            if nx == dest_x and ny == dest_y:
+                global taxi
+                taxi = (nx, ny)
+                return dist+1
 
-x, y = map(int, input().split())
+            visited[nx][ny] = True
+            queue.append((nx, ny, dist+1))
+    
+    return -1
 
-d = [[] for _ in range(m+1)]
-for i in range(m):
-    x1, y1, x2, y2 = map(int, input().split())
-    a[x1-1][y1-1] = i+1
-    d[i+1] = [x2-1, y2-1]
+def find_client():
+    global taxi
+    x, y = taxi
+    candidate = []
+    min_dist = float('inf') if board[x][y] <= 1 else 0
 
-x -= 1; y -= 1
-for _ in range(m):
-    q1, c1 = deque(), [[0 for _ in range(n)] for _ in range(n)]
-    q2, c2 = deque(), [[-1 for _ in range(n)] for _ in range(n)]
+    if min_dist:
+        visited = [[False] * N for _ in range(N)]
+        visited[x][y] = True
 
-    if a[x][y] > 0:
-        res = bfs2(x, y, a[x][y])
-        if res == 0:
-            print(-1)
-            sys.exit()
-        length, nx, ny = res
-        if length > fuel:
-            print(-1)
-            sys.exit()
-        fuel += length
-        a[x][y] = 0
-        x, y = nx, ny
-        continue
+        queue = deque()
+        queue.append((x, y, 0))
 
-    res = bfs1(x, y)
-    if res == 0:
-        print(-1)
-        sys.exit()
+        while queue:
+            x, y, dist = queue.popleft()
+
+            if dist > min_dist:
+                break
+
+            if board[x][y] >= 2:
+                candidate.append((x, y))
+
+            if dist == min_dist:
+                continue
+
+            for i in range(4):
+                nx, ny = x + dx[i], y + dy[i]
+
+                if nx < 0 or ny < 0 or nx >= N or ny >= N:
+                    continue
+
+                if visited[nx][ny] or board[nx][ny] == 1:
+                    continue
+                
+                visited[nx][ny] = True
+                queue.append((nx, ny, dist+1))
+
+                if board[nx][ny] >= 2:
+                    min_dist = dist+1
+
     else:
-        x, y = res
-print(fuel)
+        candidate.append((x, y))
+
+    global fuel
+    if min_dist > fuel or not candidate:
+        return False
+
+    candidate.sort(key=lambda x: (x[0], x[1]))
+    x, y = candidate[0]
+
+    dest_dist = find_dest_dist(x, y)
+
+    if dest_dist == -1:
+        return False
+
+    total_dist = min_dist + dest_dist
+
+    if total_dist > fuel:
+        return False
+
+    else:
+        fuel = fuel - min_dist + dest_dist
+        return True
+
+cnt = len(destinations)
+
+while cnt:
+    if find_client():
+        cnt -= 1
+    else:
+        break
+
+print(fuel if cnt == 0 else -1)
