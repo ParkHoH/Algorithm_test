@@ -1,44 +1,52 @@
-board = [input() for _ in range(5)]
+from itertools import combinations
+from collections import deque
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+dx = (-1, 1, 0, 0)
+dy = (0, 0, -1, 1)
 
-def dfs(x, y, cnt_S, cnt_Y, depth):
-    if depth == 7 and cnt_S > cnt_Y:
-        global result
-        result += 1
-        return
-    
-    if cnt_Y >= 4:
-        return
+board = [list(input()) for _ in range(5)]
+candidate = [(x, y) for x in range(5) for y in range(5)]
 
-    for i in range(4):
-        nx, ny = x + dx[i], y + dy[i]
+def check_dasom_cnt(comb):
+    cnt = 0
 
-        if nx < 0 or ny < 0 or nx >= 5 or ny >= 5 or visited[nx][ny]:
-            continue
+    for x, y in comb:
+        if board[x][y] == "S":
+            cnt += 1
 
-        visited[nx][ny] = True
-        
-        if board[nx][ny] == "S":
-            dfs(nx, ny, cnt_S+1, cnt_Y, depth+1)
-        else:
-            dfs(nx, ny, cnt_S, cnt_Y+1, depth+1)
+    return True if cnt >= 4 else False
 
-        visited[nx][ny] = False
+def check_adj(comb):
+    x, y = comb[0]
+    cnt = 1
 
-result = 0
-visited = [[False] * 5 for _ in range(5)]
+    visited = [[False] * 7 for _ in range(7)]
+    visited[x][y] = True
 
-for i in range(5):
-    for j in range(5):
-        visited[i][j] = True
+    queue = deque()
+    queue.append((x, y))
 
-        if board[i][j] == "S":
-            dfs(i, j, 1, 0, 1)
-        else:
-            dfs(i, j, 0, 1, 1)
+    while queue:
+        x, y = queue.popleft()
 
-        visited[i][j] = False
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
 
-print(result)
+            if nx < 0 or ny < 0 or nx >= 7 or ny >= 7 or visited[nx][ny]:
+                continue
+
+            if (nx, ny) in comb:
+                cnt += 1
+                visited[nx][ny] = True
+                queue.append((nx, ny))
+
+    return True if cnt == 7 else False
+
+answer = 0
+
+for comb in combinations(candidate, 7):
+    if check_dasom_cnt(comb):
+        if check_adj(comb):
+            answer += 1
+
+print(answer)

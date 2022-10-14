@@ -1,68 +1,95 @@
-n, m = map(int, input().split())
+from collections import deque
 
+dx = (0, -1, -1, -1, 0, 1, 1, 1)
+dy = (-1, -1, 0, 1, 1, 1, 0, -1)
 
-arr = [list(map(int, input().split())) for _ in range(n)]
-moves = []
-for i in range(m):
-    tmp = list(map(int, input().split()))
-    moves.append([tmp[0] - 1, tmp[1]])
+ddx = (-1, -1, 1, 1)
+ddy = (-1, 1, -1, 1)
 
-clouds = [[n-2, 0], [n-2, 1], [n-1, 0], [n-1, 1]]
+N, M = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(N)]
+clouds = [(N-1, 0), (N-1, 1), (N-2, 0), (N-2, 1)]
 
-dx = [0, -1, -1, -1, 0, 1, 1, 1]
-dy = [-1, -1, 0, 1, 1, 1, 0, -1]
-for i in range(m):
-    # step 1.
-    # 이동
-    move = moves[i]
-    next_clouds = []
-    for cloud in clouds:
-        x = cloud[0]
-        y = cloud[1]
-        d = move[0]
-        s = move[1]
-        nx = (n + x + dx[d] * s) % n
-        ny = (n + y + dy[d] * s) % n
-        next_clouds.append([nx, ny])
+water_over = set()
+for i in range(N):
+    for j in range(N):
+        if board[i][j] >= 2: water_over.add((i, j))
 
-    # step 2.
-    visited = [[False]* n for _ in range(n)]
-    for cloud in next_clouds:
-        x = cloud[0]
-        y = cloud[1]
-        arr[x][y] += 1
-        visited[x][y] = True
-    
-    # step 3
-    clouds = []
+def move_cloud(direction, speed):
+    new_clouds = []
 
-    # step 4
-    cx = [-1, -1, 1, 1]
-    cy = [-1, 1, -1, 1]
-    for cloud in next_clouds:
-        x = cloud[0]
-        y = cloud[1]
-        count = 0
+    for x, y in clouds:
+        nx = x + dx[direction] * speed
+        ny = y + dy[direction] * speed
+
+        while nx < 0:
+            nx += N
+        while ny < 0:
+            ny += N
+
+        nx %= N
+        ny %= N
+
+        new_clouds.append((nx, ny))
+
+    return new_clouds
+
+def increase_water():
+    for x, y in clouds:
+        board[x][y] += 1
+
+        if board[x][y] == 2:
+            water_over.add((x, y))
+
+def water_copy():
+    for x, y in clouds:
+        cnt = 0
+
         for i in range(4):
-            nx = x + cx[i]
-            ny = y + cy[i]
+            nx, ny = x + ddx[i], y + ddy[i]
 
-            if 0 <= nx < n and 0<= ny < n and arr[nx][ny] >= 1:
-                count += 1
+            if nx < 0 or ny < 0 or nx >= N or ny >= N:
+                continue
 
-        arr[x][y] += count
+            if board[nx][ny]:
+                cnt += 1
+
+        board[x][y] += cnt
+        if board[x][y] >= 2: water_over.add((x, y))
+
+def make_cloud():
+    global clouds
+
+    clouds = set(clouds)
+    new_clouds = []
+    remove_list = []
+
+    for x, y in water_over:
+        if (x, y) in clouds:
+            continue
         
-    # step 5
+        board[x][y] -= 2
+        new_clouds.append((x, y))
+        if board[x][y] <= 1: remove_list.append((x, y))
 
-    for i in range(n):
-        for j in range(n):
-            if arr[i][j] >= 2 and visited[i][j] == False:
-                arr[i][j] -= 2
-                clouds.append([i, j])
+    for xy in remove_list:
+        water_over.remove(xy)
 
-ans = 0
-for i in range(n):
-    ans += sum(arr[i])
+    clouds = new_clouds
 
+for _ in range(M):
+    direction, speed = map(int, input().split())
+    direction -= 1
 
-print(ans)
+    clouds = move_cloud(direction, speed)
+    increase_water()
+    water_copy()
+    make_cloud()
+
+answer = 0
+
+for i in range(N):
+    for j in range(N):
+        answer += board[i][j]
+
+print(answer)

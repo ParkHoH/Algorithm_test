@@ -1,55 +1,102 @@
-import sys
 from collections import deque
 
-input = sys.stdin.readline
-dx = [0, 1, 0, -1]
-dy = [1, 0, -1, 0]
+dx = (0, 0, -1, 1)
+dy = (1, -1, 0, 0)
+# 동 서 북 남
 
+N, M, K = map(int, input().split()) 
+board = [list(map(int, input().split())) for _ in range(N)]
+dice = [1, 6, 3, 4, 5, 2] # 0위, 1아래, 2동, 3서, 4남, 5북
+    #  (1, 6, 3, 4, 5, 2)
 
-def bfs(x, y, k):
-    c[x][y] = 1
-    q.append([x, y])
-    cnt = 0
-    while q:
-        x, y = q.popleft()
+dice_xy = (0, 0)
+direction = 1
+score = 0
+
+def turn(direction): # 0위, 1아래, 2동, 3서, 4남, 5북
+    global dice
+    if direction == 1:
+        dice = [dice[3], dice[2], dice[0], dice[1], dice[4], dice[5]]
+    elif direction == 2:
+        dice = [dice[2], dice[3], dice[1], dice[0], dice[4], dice[5]]
+    elif direction == 3:
+        dice = [dice[4], dice[5], dice[2], dice[3], dice[1], dice[0]]
+    else:
+        dice = [dice[5], dice[4], dice[2], dice[3], dice[0], dice[1]]
+
+def cal_score(x, y):
+    visited = [[False] * M for _ in range(N)]
+    visited[x][y] = True
+
+    queue = deque()
+    queue.append((x, y))
+    
+    standard = board[x][y]
+    cnt = 1
+
+    while queue:
+        x, y = queue.popleft()
+
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < m:
-                if c[nx][ny] == 0 and a[nx][ny] == k:
-                    cnt += 1
-                    c[nx][ny] = 1
-                    q.append([nx, ny])
-    return cnt
 
+            if nx < 0 or ny < 0 or nx >= N or ny >= M or visited[nx][ny]:
+                continue
+            
+            if board[nx][ny] == standard:
+                cnt += 1
+                visited[nx][ny] = True
+                queue.append((nx, ny))
 
-n, m, k = map(int, input().split())
-a = [list(map(int, input().split())) for _ in range(n)]
-dice = [1, 2, 3, 4, 5, 6]
+    return standard * cnt
 
-x, y, dir, ans = 0, 0, 0, 0
-for _ in range(k):
-    if not 0 <= x + dx[dir] < n or not 0 <= y + dy[dir] < m:
-        dir = (dir + 2) % 4
+def decide_dir(direction):
+    A = dice[1]
+    B = board[dice_xy[0]][dice_xy[1]]
+    # 동 서 북 남
+    if A > B: # 90도 시계 방향 회전
+        if direction == 1:
+            direction = 4
+        elif direction == 2:
+            direction = 3
+        elif direction == 3:
+            direction = 1
+        else:
+            direction = 2
 
-    x, y = x + dx[dir], y + dy[dir]
+    elif A < B: # 90도 반시계 방향 회전
+        if direction == 1:
+            direction = 3
+        elif direction == 2:
+            direction = 4
+        elif direction == 3:
+            direction = 2
+        else:
+            direction = 1
 
-    q = deque()
-    c = [[0] * m for _ in range(n)]
+    return direction
 
-    ans += (bfs(x, y, a[x][y]) + 1) * a[x][y]
+for _ in range(K):
+    nx = dice_xy[0] + dx[direction-1]
+    ny = dice_xy[1] + dy[direction-1]
 
-    if dir == 0:
-        dice[0], dice[2], dice[3], dice[5] = dice[3], dice[0], dice[5], dice[2]
-    elif dir == 1:
-        dice[0], dice[1], dice[4], dice[5] = dice[1], dice[5], dice[0], dice[4]
-    elif dir == 2:
-        dice[0], dice[2], dice[3], dice[5] = dice[2], dice[5], dice[0], dice[3]
-    else:
-        dice[0], dice[1], dice[4], dice[5] = dice[4], dice[0], dice[5], dice[1]
+    if nx < 0 or ny < 0 or nx >= N or ny >= M:
+        nx = dice_xy[0] - dx[direction-1]
+        ny = dice_xy[1] - dy[direction-1]
 
-    if dice[5] > a[x][y]:
-        dir = (dir + 1) % 4
-    elif dice[5] < a[x][y]:
-        dir = (dir + 3) % 4
+        if direction == 1:
+            direction = 2
+        elif direction == 2:
+            direction = 1
+        elif direction == 3:
+            direction = 4
+        else:
+            direction = 3
 
-print(ans)
+    dice_xy = (nx, ny)
+    
+    turn(direction)
+    score += cal_score(dice_xy[0], dice_xy[1])
+    direction = decide_dir(direction)
+
+print(score)
