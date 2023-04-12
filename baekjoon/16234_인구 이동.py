@@ -1,14 +1,17 @@
 from collections import deque
 
 N, L, R = map(int, input().split())
+result = 0
 graph = []
+
 for _ in range(N):
     graph.append(list(map(int, input().split())))
 
 visited = [[False] * N for _ in range(N)]
 stack = []
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+
+dx = (-1, 1, 0, 0)
+dy = (0, 0, -1, 1)
 
 def bfs(x, y):
     queue = deque()
@@ -16,6 +19,7 @@ def bfs(x, y):
     visited[x][y] = True
     plus = graph[x][y]
     cnt = 1
+
     while queue:
         x, y = queue.popleft()
         for i in range(4):
@@ -25,14 +29,13 @@ def bfs(x, y):
 
             if not visited[nx][ny] and L <= abs(graph[x][y] - graph[nx][ny]) <= R:
                 visited[nx][ny] = True
-                stack.append([nx, ny])
+                stack.append((nx, ny))
                 queue.append((nx, ny))
                 plus += graph[nx][ny]
                 cnt += 1
                 
     return plus // cnt
 
-result = 0
 while True:
     changed = False
 
